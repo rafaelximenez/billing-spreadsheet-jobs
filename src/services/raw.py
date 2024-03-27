@@ -107,13 +107,14 @@ def transform_usa(df, df_dolar):
 def apply_double_taxed(row, df):
     filtered_df = df[df['nf_code'] == row['sending_of_nf_no_nf']]
     if len(filtered_df) > 0:
-        row['revenue'] = row['revenue'] - filtered_df['revenue_discount'].values[0] - filtered_df['fee_bpool'].values[0]
+        row['revenue'] = row['revenue'] - filtered_df['nf_partner_value'].values[0]
         print(row)
     return row
 
 def transform_brasil(df, df2):
     df2['po_value'] = df2['po_value'].apply(format_to_currency).round(2)
     df2['fee_bpool'] = df2['fee_bpool'].apply(format_to_currency).round(2)
+    df2['nf_partner_value'] = df2['nf_partner_value'].apply(format_to_currency).round(2)
     df2['revenue_discount'] = df2['po_value'] - df2['fee_bpool']
 
     df = df[~df['month'].isin(['perda', 'substituição', 'desconsiderar', 'perda em fev/24'])]
